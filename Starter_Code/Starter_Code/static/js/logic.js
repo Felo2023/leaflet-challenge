@@ -33,19 +33,42 @@ for (i=0;i<earthquakeFeatures.length;i++){
     // Setting our circle's radius to equal the output of our markerSize() function:
     // This will make our marker's size proportionate to its population.
     radius: magnitude
-  }).bindPopup(`<h1>$</h1> <hr> <h3>Population: </h3>`).addTo(myMap);
+  }).bindPopup(`<h1>Magnitude = ${earthquakeFeatures[i].properties.mag}</h1> <hr> <h3>Place = ${earthquakeFeatures[i].properties.place} </h3>`).addTo(myMap);
 };
 }
 // Define a markerSize() function that will give each earthquake size and depth
 function markerColor(depth) {
-  if (depth < 15) return "#04FC14";
+  if (depth < 10) return "#04FC14";
   else if (depth < 30) return "#B7FC04";
-  else if (depth < 45) return "#EEFC04";
-  else if (depth < 60) return "#FCB304";
-  else if (depth < 75) return "#FC8504";
+  else if (depth < 50) return "#EEFC04";
+  else if (depth < 70) return "#FCB304";
+  else if (depth < 90) return "#FC8504";
   else return "#FC0904"
 };
 
+  // Set up the legend.
+  let legend = L.control({ position: "bottomright" });
+  legend.onAdd = function() {
+    let div = L.DomUtil.create("div", "info legend");
+    let categories = ['-10','10','30','50','70','90'];
+    let colors =["#04FC14","#B7FC04","#EEFC04","#FCB304","#FC8504","#FC0904"]
+    let labels = [];
+
+    // Add the minimum and maximum.
+    let legendInfo = "<h1>Depth</h1>"
+
+    div.innerHTML = legendInfo;
+
+    categories.forEach(function(limit, index) {
+      labels.push("<li style=\"background-color: " + colors[index] + "\"></li>"+ categories[index] + (categories[index + 1] ? '&ndash;' + categories[index + 1] + '<br>' : '+'));
+    });
+
+    div.innerHTML += "<ul>" + labels.join("") + "</ul>";
+    return div;
+  };
+
+  // Adding the legend to the map
+  legend.addTo(myMap);
 
 
 
